@@ -64,11 +64,12 @@ class BigMonster extends Character{
 
 //Criando Cenario
 class Stage{
-    constructor(fighter1, fighter2, fighter1EL, fighter2EL){
+    constructor(fighter1, fighter2, fighter1EL, fighter2EL, logObject){
         this.fighter1 = fighter1
         this.fighter2 = fighter2
         this.fighter1EL = fighter1EL
         this.fighter2EL = fighter2EL
+        this.log = logObject
     }
 
     start(){
@@ -98,7 +99,7 @@ class Stage{
         //Criando os ataques
     doAttack(attacking, attacked){
         if(attacking.life <= 0 || attacked.life <= 0){
-            console.log('Atacando cachorro morto')
+            this.log.addMessage('Oponente derrotado')
             return
         }
         //Criando fatores de ataque e defesa (como se fosse "ataque e defesa critico dos RPG")
@@ -110,13 +111,32 @@ class Stage{
 
         if(actualAttack > actualDefense){
             attacked.life -= actualAttack
-            console.log(`${attacking.name} causou ${actualAttack} de dano em ${attacked.name}`)
+            this.log.addMessage(`${attacking.name} causou ${actualAttack} de dano em ${attacked.name}`)
         } else{
-            console.log(`${attacked.name} consegui defender.`)
+            this.log.addMessage(`${attacked.name} consegui defender.`)
         }
 
 
         //Para atualizar as informações
         this.update()
+    }
+}
+//Criando Log
+class Log{
+    lista = []
+    constructor(listaEL){
+        this.listaEL = listaEL
+    }
+    addMessage(msg){
+        this.lista.push(msg)
+        this.render()
+    }
+
+    render(){
+        this.listaEL.innerHTML = ''
+
+        for (let i in this.lista){
+            this.listaEL.innerHTML += `<li>${this.lista[i]}</li>`
+        }
     }
 }
